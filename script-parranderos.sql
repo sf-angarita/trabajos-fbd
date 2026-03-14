@@ -25,6 +25,14 @@ FETCH FIRST 10 ROWS ONLY;
 cantidad de bebidas que cada uno prefiere. Los resultados deben estar ordenados de mayor a menor,
 y solo reportar los primeros 20 resultados.*/
 
+SELECT ID, NOMBRE, COUNT(G.ID_BEBIDA) AS CANTIDAD_PREFERIDAS
+FROM PARRANDEROS.BEBEDORES
+INNER JOIN PARRANDEROS.GUSTAN G ON BEBEDORES.ID = G.ID_BEBEDOR
+GROUP BY BEBEDORES.ID, BEBEDORES.NOMBRE
+HAVING COUNT(G.ID_BEBIDA) >3
+ORDER BY CANTIDAD_PREFERIDAS DESC
+FETCH FIRST 20 ROWS ONLY
+
 /*5. El nombre de los Bares que sirven al menos una bebida de tipo jugo, agua, gaseosa o
 aromática en horarios diurnos, ordenados por el nombre del bar y sin repetir. Reporte las primeras 15
 filas.*/
