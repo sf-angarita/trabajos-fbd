@@ -24,7 +24,6 @@ FETCH FIRST 10 ROWS ONLY;
 /* 4. El id, nombre de todos los bebedores a los que les gustan más de 3 bebidas diferentes, junto con la
 cantidad de bebidas que cada uno prefiere. Los resultados deben estar ordenados de mayor a menor,
 y solo reportar los primeros 20 resultados.*/
-
 SELECT ID, NOMBRE, COUNT(G.ID_BEBIDA) AS CANTIDAD_PREFERIDAS
 FROM PARRANDEROS.BEBEDORES
 INNER JOIN PARRANDEROS.GUSTAN G ON BEBEDORES.ID = G.ID_BEBEDOR
@@ -46,6 +45,11 @@ FETCH FIRST 15 ROWS ONLY;
 
 /* 6. Para cada bebida que tenga entre 4 y 8 grados de alcohol y cuyo nombre no comience con
 ‘bebida’, mostrar el nombre y el número de bebedores que las prefieren.*/
+SELECT B.NOMBRE, COUNT(G.ID_BEBEDOR) AS NUM_BEBEDORES
+FROM PARRANDEROS.BEBIDAS B
+INNER JOIN PARRANDEROS.GUSTAN G ON B.ID = G.ID_BEBIDA
+WHERE B.GRADO_ALCOHOL >= 4 AND B.GRADO_ALCOHOL <= 8 AND B.NOMBRE NOT LIKE 'bebida%'
+GROUP BY B.NOMBRE;
 
 /*7. Para las ciudades de Cali, Bogotá y Medellín, obtener el nombre y el ID de todos los bares que sirven
 bebidas en horario nocturno, mostrando los resultados ordenados por ciudad y nombre del bar.*/
