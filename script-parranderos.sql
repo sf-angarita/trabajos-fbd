@@ -14,9 +14,11 @@ HAVING SUM(CANT_SEDES) > 30 AND SUM(CANT_SEDES) < 50 AND COUNT(*) >= 6;
 
 /* 3. Los nombres e ids de los 10 bares con mayor oferta de bebidas, incluyendo el número de diferentes
 bebidas servidas en cada bar*/
-SELECT NOMBRE, ID
-FROM BARES 
-INNER JOIN BARES.SIRVEN ON (BARES.ID)
+SELECT ID, NOMBRE, COUNT (S.ID_BEBIDA) AS TOTAL_BEBIDAS
+FROM PARRANDEROS.BARES 
+INNER JOIN PARRANDEROS.SIRVEN S ON BARES.ID = S.ID_BAR
+GROUP BY BARES.NOMBRE, BARES.ID
+ORDER BY TOTAL_BEBIDAS DESC
 FETCH FIRST 10 ROWS ONLY;
 
 /* 4. El id, nombre de todos los bebedores a los que les gustan más de 3 bebidas diferentes, junto con la
