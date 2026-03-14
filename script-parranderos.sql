@@ -31,11 +31,18 @@ INNER JOIN PARRANDEROS.GUSTAN G ON BEBEDORES.ID = G.ID_BEBEDOR
 GROUP BY BEBEDORES.ID, BEBEDORES.NOMBRE
 HAVING COUNT(G.ID_BEBIDA) >3
 ORDER BY CANTIDAD_PREFERIDAS DESC
-FETCH FIRST 20 ROWS ONLY
+FETCH FIRST 20 ROWS ONLY;
 
 /*5. El nombre de los Bares que sirven al menos una bebida de tipo jugo, agua, gaseosa o
 aromática en horarios diurnos, ordenados por el nombre del bar y sin repetir. Reporte las primeras 15
 filas.*/
+SELECT DISTINCT B.NOMBRE
+FROM PARRANDEROS.BARES B
+INNER JOIN PARRANDEROS.SIRVEN S ON B.ID = S.ID_BAR
+INNER JOIN PARRANDEROS.BEBIDAS ON BEBIDAS.ID = S.ID_BEBIDA
+WHERE BEBIDAS.TIPO IN ('jugo', 'agua', 'gaseosa', 'aromática') AND S.HORARIO = 'DIURNO'
+ORDER BY B.NOMBRE
+FETCH FIRST 15 ROWS ONLY;
 
 /* 6. Para cada bebida que tenga entre 4 y 8 grados de alcohol y cuyo nombre no comience con
 ‘bebida’, mostrar el nombre y el número de bebedores que las prefieren.*/
