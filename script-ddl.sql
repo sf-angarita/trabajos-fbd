@@ -1,5 +1,5 @@
 ALTER SESSION SET CURRENT_SCHEMA = ISIS2304J01202610;  
-
+--1. a) Cree la tabla ESTUDIANTES con sus respectivas llaves primarias y tipos de datos, tenga en cuenta que el atributo nombre no puede ser nulo. 
 CREATE TABLE ESTUDIANTES (
     CODIGO NUMERIC(9),
     NOMBRE VARCHAR2(255) NOT NULL,
@@ -12,6 +12,7 @@ CREATE TABLE ESTUDIANTES (
 ALTER TABLE ESTUDIANTES
 MODIFY NOMBRE NOT NULL;
 
+-- b) Cree la tabla MATERIAS, establezca que el atributo nombre no pueda ser nulo y el atributo créditos solo pueda tomar valores entre 0 y 6. 
 CREATE TABLE INSCRITOS (
     CODIGO_ESTUDIANTE NUMERIC(9),
     CODIGO_MATERIA VARCHAR2(255),
@@ -25,6 +26,7 @@ ALTER TABLE INSCRITOS
 ADD CONSTRAINT cod_est_fk FOREIGN KEY(CODIGO_ESTUDIANTE) REFERENCES ESTUDIANTES(CODIGO)
 ADD CONSTRAINT cod_mat_fk FOREIGN KEY(CODIGO_MATERIA) REFERENCES MATERIAS(CODIGO)
 
+-- c) Cree la tabla INSCRITOS y agregué las llaves foráneas correspondientes. Para esta tabla defina que ninguno de los atributos puede ser nulo y el atributo semestre solo puede tener valores de 1 y 2.
 CREATE TABLE MATERIAS (
     CODIGO VARCHAR2(255),
     NOMBRE VARCHAR2(255) NOT NULL,
@@ -35,10 +37,12 @@ CREATE TABLE MATERIAS (
 ALTER TABLE MATERIAS
 ADD CONSTRAINT materias_pk PRIMARY KEY (CODIGO);
 
+/* 2. Cree una secuencia para los códigos de los estudiantes llamada CODIGO_ESTUDIANTES que inicie en 1 y aumente su valor en 1 en cada nuevo registro. */
 CREATE SEQUENCE codigos_estudiante 
 START WITH 1
 INCREMENT BY 1
 
+-- 3. Utilizando la secuencia CODIGO_ESTUDIANTES inserte 5 registros en la tabla ESTUDIANTES. 
 INSERT INTO ESTUDIANTES(CODIGO, NOMBRE, APELLIDO, EDAD, CEDULA)
 VALUES (codigos_estudiante.nextval, 'ANDRES SANTIAGO', 'RODRIGUEZ SALAZAR', 18, 56776978);
 INSERT INTO ESTUDIANTES(CODIGO, NOMBRE, APELLIDO, EDAD, CEDULA)
@@ -50,6 +54,7 @@ VALUES (codigos_estudiante.nextval, 'CAROLINA', 'CEBALLOS', 19, 9426767666);
 INSERT INTO ESTUDIANTES(CODIGO, NOMBRE, APELLIDO, EDAD, CEDULA)
 VALUES (codigos_estudiante.nextval, 'SEBASTIAN', 'PIPE', 12, 67676767);
 
+-- 4. Inserte los siguientes registros en la tabla MATERIAS: (registros especificos dados en el enunciado) 
 INSERT INTO MATERIAS VALUES (1221, 'IP', 3);  
 INSERT INTO MATERIAS VALUES (1225, 'EDA', 3);  
 INSERT INTO MATERIAS VALUES (1226, 'DPOO', 3);  
@@ -60,12 +65,14 @@ INSERT INTO MATERIAS VALUES (1200, 'CBUCOL', 2);
 INSERT INTO MATERIAS VALUES (1304, 'INFRAESTRUCTURA', 1);  
 INSERT INTO MATERIAS VALUES (1207, 'INGLES', 0);  
 
+-- 5. Elimine todas las materias que tengan más de 3 créditos. 
 SELECT * FROM MATERIAS;
 
 DELETE FROM MATERIAS
 WHERE CREDITOS > 3;
 SELECT * FROM MATERIAS;
 
+-- 6. Actualice los registros de las materias con código 1304 y 1207 para que tengan 3 y 2 créditos respectivamente. 
 UPDATE MATERIAS
 SET CREDITOS=3
 WHERE CODIGO= 1304;
@@ -73,6 +80,7 @@ UPDATE MATERIAS
 SET CREDITOS=2
 WHERE CODIGO= 1207;
 
+-- 7. Inserte 5 registros en la tabla INSCRITOS relacionando los datos de las tablas ESTUDIANTES y MATERIAS.
 SELECT * FROM ESTUDIANTES;
 
 INSERT INTO INSCRITOS (CODIGO_ESTUDIANTE, CODIGO_MATERIA, ANIO, SEMESTRE)
@@ -90,6 +98,7 @@ VALUES (3, '1200', 2022, 1);
 INSERT INTO INSCRITOS (CODIGO_ESTUDIANTE, CODIGO_MATERIA, ANIO, SEMESTRE)
 VALUES (4, '1221', 2026, 1);
 
+-- 8. Actualice todos los registros de la tabla INSCRITOS para que todas las filas sean del segundo semestre del año 2023.
 SELECT * FROM INSCRITOS;
 
 UPDATE INSCRITOS
