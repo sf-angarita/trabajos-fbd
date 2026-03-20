@@ -37,9 +37,9 @@ aromática en horarios diurnos, ordenados por el nombre del bar y sin repetir. R
 filas.*/
 SELECT DISTINCT B.NOMBRE
 FROM PARRANDEROS.BARES B
-INNER JOIN PARRANDEROS.SIRVEN S ON B.ID = S.ID_BAR
-INNER JOIN PARRANDEROS.BEBIDAS ON BEBIDAS.ID = S.ID_BEBIDA
-WHERE BEBIDAS.TIPO IN ('jugo', 'agua', 'gaseosa', 'aromática') AND S.HORARIO = 'DIURNO'
+INNER JOIN PARRANDEROS.SIRVEN S ON BARES.ID = S.ID_BAR
+INNER JOIN PARRANDEROS.BEBIDAS BEB ON BEBIDAS.ID = S.ID_BEBIDA
+WHERE (BEB.TIPO LIKE 'jugo%' OR BEB.TIPO LIKE 'agua%' OR BEB.TIPO LIKE 'gaseosa%' OR BEB.TIPO LIKE 'aromática%') AND S.HORARIO = 'DIURNO'
 ORDER BY B.NOMBRE
 FETCH FIRST 15 ROWS ONLY;
 
@@ -54,11 +54,17 @@ GROUP BY B.NOMBRE;
 /*7. Para las ciudades de Cali, Bogotá y Medellín, obtener el nombre y el ID de todos los bares que sirven
 bebidas en horario nocturno, mostrando los resultados ordenados por ciudad y nombre del bar.*/
 
+
 /*8. El nombre de los bares que sirven bebidas de más de 9 grados de alcohol y que hayan sido visitados
 por al menos un bebedor, ordenados por el nombre del bar. Reporte las primeras 20 filas*/
 
 /* 9. El nombre de las bebidas que les gustan a los bebedores que no hayan visitado ningún bar y cuyo
 nombre no contenga la palabra ‘bebida’. Reporte las primeras 10 filas.*/
+SELECT DISTINCT BEB.NOMBRE
+FROM BEBIDAS BEB
+JOIN GUSTAN G ON BEB.ID = G.ID_BEBIDA
+WHERE BEB.NOMBRE NOT LIKE '%bebida%' AND G.ID_BEBEDOR NOT IN (SELECT ID_BEBEDOR FROM FRECUENTAN)
+FETCH FIRST 10 ROWS ONLY;
 
 /* 10. Los clientes mixtos distintos a los que les gusta la bebida de tipo vino tinto. Un cliente mixto es aquel
 que visita bares de todos los presupuestos. Se debe mostrar el nombre del cliente y su ID. Los
