@@ -35,20 +35,20 @@ FETCH FIRST 20 ROWS ONLY;
 /*5. El nombre de los Bares que sirven al menos una bebida de tipo jugo, agua, gaseosa o
 aromática en horarios diurnos, ordenados por el nombre del bar y sin repetir. Reporte las primeras 15
 filas.*/
-SELECT B.NOMBRE2
-FROM PARRANDEROS.BARES B
-WHERE B.ID2 IN(
-    SELECT ID_BAR
-    FROM PARRANDEROS.SIRVEN
-    INNER JOIN PARRANDEROS.BEBIDAS BEB ON ID_BEBIDA=B.ID2
-    WHERE HORARIO='diurno' AND BEB.TIPO IN (
-        SELECT TIP.ID
-        FROM PARRANDEROS.TIPOS_BEBIDA TIP
-        WHERE NOMBRE='jugo' OR NOMBRE='agua' OR NOMBRE='gaseosa' OR NOMBRE='aromarica'
+SELECT NOMBRE2
+FROM BARES
+WHERE ID2 IN (
+    SELECT  ID_BAR
+    FROM SIRVEN
+    INNER JOIN BEBIDAS B ON ID_BEBIDA=B.ID
+    WHERE HORARIO='diurno' AND B.TIPO IN (
+        SELECT ID
+        FROM TIPOS_BEBIDA
+        WHERE NOMBRE='jugo' OR NOMBRE='agua' OR NOMBRE='gaseosa' OR NOMBRE='aromatica'
     )
 )
-ORDER BY B.NOMBRE2
-FETCH FIRST 15 ROW ONLY;
+ORDER BY NOMBRE2
+FETCH FIRST 15 ROWS ONLY;
 
 /* 6. Para cada bebida que tenga entre 4 y 8 grados de alcohol y cuyo nombre no comience con
 ‘bebida’, mostrar el nombre y el número de bebedores que las prefieren.*/
