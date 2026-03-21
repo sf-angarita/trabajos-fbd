@@ -100,12 +100,18 @@ FETCH FIRST 10 ROWS ONLY;
 /* 10. Los clientes mixtos distintos a los que les gusta la bebida de tipo vino tinto. Un cliente mixto es aquel
 que visita bares de todos los presupuestos. Se debe mostrar el nombre del cliente y su ID. Los
 resultados deben organizarse de acuerdo con el nombre del bebedor. Reporte las primeras 20 filas.*/
+SELECT DISTINCT BEB.NOMBRE, BEB.ID
+FROM PARRANDEROS.BEBEDORES BEB
+
+
+
+ORDER BY BEB.NOMBRE
+FETCH FIRST 20 ROWS ONLY;
 
 /*11. El id, nombre y número de visitas de los bebedores que están entre el top 3 de clientes que más han
 visitado bares y a los que sólo les gustan las bebidas de más de 9 grados de alcohol.*/
+SELECT F.ID_BEBEDOR, BEB.NOMBRE, F.FECHA_VISITA
 
-SELECT * 
-FROM PARRANDEROS.BEBIDAS;
-
-
+ORDER BY 
+FECTH FIRST 3 ROWS ONLY
 
