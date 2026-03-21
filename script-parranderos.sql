@@ -53,10 +53,34 @@ GROUP BY B.NOMBRE;
 
 /*7. Para las ciudades de Cali, Bogotá y Medellín, obtener el nombre y el ID de todos los bares que sirven
 bebidas en horario nocturno, mostrando los resultados ordenados por ciudad y nombre del bar.*/
-
+SELECT ID2 AS ID, NOMBRE2 AS NOMBRE, CIUDAD
+FROM BARES
+WHERE (CIUDAD='Bogota' OR CIUDAD='Cali' OR CIUDAD='Medellin') AND ID2 IN (
+    SELECT ID_BAR AS ID2
+    FROM SIRVEN
+    WHERE HORARIO='nocturno'
+)
+ORDER BY CIUDAD, NOMBRE2;
 
 /*8. El nombre de los bares que sirven bebidas de más de 9 grados de alcohol y que hayan sido visitados
 por al menos un bebedor, ordenados por el nombre del bar. Reporte las primeras 20 filas*/
+SELECT UNIQUE(NOMBRE2) AS NOMBRE -- No especifica nombres unicos
+FROM BARES
+WHERE ID2 IN (
+    SELECT ID_BAR
+    FROM SIRVEN S
+    INNER JOIN BEBIDAS B ON S.ID_BEBIDA=B.ID
+    WHERE B.GRADO_ALCOHOL > 9
+) AND ID2 IN (
+    SELECT ID_BAR
+    FROM FRECUENTAN
+)
+ORDER BY NOMBRE2
+FETCH FIRST 20 ROWS ONLY;
+
+SELECT * FROM SIRVEN;
+SELECT * FROM BEBIDAS;
+SELECT * FROM TIPOS_BEBIDA;
 
 /* 9. El nombre de las bebidas que les gustan a los bebedores que no hayan visitado ningún bar y cuyo
 nombre no contenga la palabra ‘bebida’. Reporte las primeras 10 filas.*/
