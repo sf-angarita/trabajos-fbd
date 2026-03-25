@@ -14,10 +14,10 @@ HAVING SUM(CANT_SEDES) > 30 AND SUM(CANT_SEDES) < 50 AND COUNT(*) >= 6;
 
 /* 3. Los nombres e ids de los 10 bares con mayor oferta de bebidas, incluyendo el número de diferentes
 bebidas servidas en cada bar*/
-SELECT ID2, NOMBRE2, COUNT (S.ID_BEBIDA) AS TOTAL_BEBIDAS
+SELECT ID, NOMBRE, COUNT (S.ID_BEBIDA) AS TOTAL_BEBIDAS
 FROM PARRANDEROS.BARES 
-INNER JOIN PARRANDEROS.SIRVEN S ON BARES.ID2 = S.ID_BAR
-GROUP BY BARES.NOMBRE2, BARES.ID2
+INNER JOIN PARRANDEROS.SIRVEN S ON BARES.ID = S.ID_BAR
+GROUP BY BARES.NOMBRE, BARES.ID
 ORDER BY TOTAL_BEBIDAS DESC
 FETCH FIRST 10 ROWS ONLY;
 
@@ -35,9 +35,9 @@ FETCH FIRST 20 ROWS ONLY;
 /*5. El nombre de los Bares que sirven al menos una bebida de tipo jugo, agua, gaseosa o
 aromática en horarios diurnos, ordenados por el nombre del bar y sin repetir. Reporte las primeras 15
 filas.*/
-SELECT B.NOMBRE2
+SELECT B.NOMBRE
 FROM PARRANDEROS.BARES B
-WHERE B.ID2 IN (
+WHERE B.ID IN (
     SELECT  S.ID_BAR
     FROM PARRANDEROS.SIRVEN S
     INNER JOIN PARRANDEROS.BEBIDAS BE ON S.ID_BEBIDA=BE.ID
@@ -47,7 +47,7 @@ WHERE B.ID2 IN (
         WHERE NOMBRE='jugo' OR NOMBRE='agua' OR NOMBRE='gaseosa' OR NOMBRE='aromatica'
     )
 )
-ORDER BY B.NOMBRE2
+ORDER BY B.NOMBRE
 FETCH FIRST 15 ROWS ONLY;
 
 /* 6. Para cada bebida que tenga entre 4 y 8 grados de alcohol y cuyo nombre no comience con
@@ -60,29 +60,29 @@ GROUP BY B.NOMBRE;
 
 /*7. Para las ciudades de Cali, Bogotá y Medellín, obtener el nombre y el ID de todos los bares que sirven
 bebidas en horario nocturno, mostrando los resultados ordenados por ciudad y nombre del bar.*/
-SELECT ID2 AS ID, NOMBRE2 AS NOMBRE, CIUDAD
+SELECT ID, NOMBRE, CIUDAD
 FROM PARRANDEROS.BARES
-WHERE (CIUDAD='Bogota' OR CIUDAD='Cali' OR CIUDAD='Medellin') AND ID2 IN (
-    SELECT ID_BAR AS ID2
+WHERE (CIUDAD='Bogota' OR CIUDAD='Cali' OR CIUDAD='Medellin') AND ID IN (
+    SELECT ID_BAR AS ID
     FROM PARRANDEROS.SIRVEN
     WHERE HORARIO='nocturno'
 )
-ORDER BY CIUDAD, NOMBRE2;
+ORDER BY CIUDAD, NOMBRE;
 
 /*8. El nombre de los bares que sirven bebidas de más de 9 grados de alcohol y que hayan sido visitados
 por al menos un bebedor, ordenados por el nombre del bar. Reporte las primeras 20 filas*/
-SELECT UNIQUE(NOMBRE2) AS NOMBRE -- No especifica nombres unicos
+SELECT UNIQUE(NOMBRE)
 FROM PARRANDEROS.BARES
-WHERE ID2 IN (
+WHERE ID IN (
     SELECT ID_BAR
     FROM PARRANDEROS.SIRVEN S
     INNER JOIN PARRANDEROS.BEBIDAS B ON S.ID_BEBIDA=B.ID
     WHERE B.GRADO_ALCOHOL > 9
-) AND ID2 IN (
+) AND ID IN (
     SELECT ID_BAR
     FROM PARRANDEROS.FRECUENTAN
 )
-ORDER BY NOMBRE2
+ORDER BY NOMBRE
 FETCH FIRST 20 ROWS ONLY;
 
 SELECT * FROM SIRVEN;
@@ -100,18 +100,19 @@ FETCH FIRST 10 ROWS ONLY;
 /* 10. Los clientes mixtos distintos a los que les gusta la bebida de tipo vino tinto. Un cliente mixto es aquel
 que visita bares de todos los presupuestos. Se debe mostrar el nombre del cliente y su ID. Los
 resultados deben organizarse de acuerdo con el nombre del bebedor. Reporte las primeras 20 filas.*/
-SELECT DISTINCT BEB.NOMBRE, BEB.ID
+SELECT BEB.ID, BEB.NOMBRE
 FROM PARRANDEROS.BEBEDORES BEB
 INNER JOIN PARRANDEROS.GUSTAN G ON BEB.ID=G.ID_BEBEDOR
 INNER JOIN PARRANDEROS.BEBIDAS BE ON G.ID_BEBIDA=BE.ID
 INNER JOIN PARRANDEROS.TIPOS_BEBIDA TIP ON BE.TIPO=TIP.ID
 INNER JOIN PARRANDEROS.FRECUENTAN F ON BEB.ID=F.ID_BEBEDOR
-INNER JOIN PARRANDEROS.BARES B ON F.ID_BAR = B.ID2
+INNER JOIN PARRANDEROS.BARES B ON F.ID_BAR = B.ID
 WHERE TIP.ID=1
 GROUP BY BEB.NOMBRE, BEB.ID
-HAVING COUNT(DISTINCT B.PRESUPUESTO) = (SELECT COUNT(DISTINCT PRESUPUESTO) 
-FROM PARRANDEROS.BARES
-WHERE PRESUPUESTO IS NOT NULL)
+HAVING COUNT(DISTINCT B.PRESUPUESTO) = (
+    SELECT COUNT(DISTINCT PRESUPUESTO) 
+    FROM PARRANDEROS.BARES
+)
 ORDER BY BEB.NOMBRE
 FETCH FIRST 20 ROWS ONLY;
 
